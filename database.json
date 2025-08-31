@@ -1,8 +1,83 @@
 {
-  "quests": [],
+  "quests": [
+    {
+      "story": {
+        "name": "Quest da Roma",
+        "description": "3 missões fáceis na Roma",
+        "reward": "QUESTROMACOMPLETA"
+      },
+      "steps": [
+        {
+          "id": "step-1",
+          "name": "APE",
+          "description": "Sem se mexer",
+          "coordinates": {
+            "x": 38.747948,
+            "y": -9.141201
+          },
+          "claimingRadius": 25,
+          "claimingWindow": {
+            "enabled": false,
+            "startDate": "",
+            "dueDate": ""
+          },
+          "reward": {
+            "enabled": true,
+            "code": "APECOMPLETO",
+            "limited": false,
+            "quantity": null
+          }
+        },
+        {
+          "id": "step-2",
+          "name": "CONTINENTE",
+          "description": "No continente",
+          "coordinates": {
+            "x": 38.747628,
+            "y": -9.140848
+          },
+          "claimingRadius": 50,
+          "claimingWindow": {
+            "enabled": false,
+            "startDate": "",
+            "dueDate": ""
+          },
+          "reward": {
+            "enabled": true,
+            "code": "CONTINENTE COMPLETO",
+            "limited": false,
+            "quantity": null
+          }
+        },
+        {
+          "id": "step-3",
+          "name": "LIXO",
+          "description": "Spot do Lixo",
+          "coordinates": {
+            "x": 38.746628,
+            "y": -9.14083
+          },
+          "claimingRadius": 100,
+          "claimingWindow": {
+            "enabled": false,
+            "startDate": "",
+            "dueDate": ""
+          },
+          "reward": {
+            "enabled": true,
+            "code": "LIXO COMPLETO",
+            "limited": false,
+            "quantity": null
+          }
+        }
+      ],
+      "id": "quest_1756672853889_1qexpdhj1",
+      "createdAt": "2025-08-31T20:40:53.889Z"
+    }
+  ],
   "metadata": {
     "version": "1.0",
-    "lastUpdated": "2025-01-25T00:00:00.000Z",
-    "totalQuests": 0
+    "lastUpdated": "2025-08-31T20:40:53.889Z",
+    "totalQuests": 1
   }
 }
