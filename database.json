@@ -8,7 +8,7 @@
       },
       "steps": [
         {
-          "id": "step-1",
+          "id": "roma-step-1",
           "name": "APE",
           "description": "Sem se mexer",
           "coordinates": {
@@ -29,7 +29,7 @@
           }
         },
         {
-          "id": "step-2",
+          "id": "roma-step-2",
           "name": "CONTINENTE",
           "description": "No continente",
           "coordinates": {
@@ -50,7 +50,7 @@
           }
         },
         {
-          "id": "step-3",
+          "id": "roma-step-3",
           "name": "LIXO",
           "description": "Spot do Lixo",
           "coordinates": {
@@ -82,7 +82,7 @@
       },
       "steps": [
         {
-          "id": "step-1",
+          "id": "guga-step-1",
           "name": "MissÃ£o em Casa",
           "description": "Essa Ã© fÃ¡cil, pra ver como Ã©.",
           "coordinates": {
@@ -103,7 +103,7 @@
           }
         },
         {
-          "id": "step-2",
+          "id": "guga-step-2",
           "name": "Supermercado",
           "description": "Pra caminhar um pouco",
           "coordinates": {
@@ -124,7 +124,7 @@
           }
         },
         {
-          "id": "step-3",
+          "id": "guga-step-3",
           "name": "Rua da Praia",
           "description": "Se estiver com calor, toma um Gelato",
           "coordinates": {
