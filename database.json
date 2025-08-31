@@ -73,11 +73,85 @@
       ],
       "id": "quest_1756672853889_1qexpdhj1",
       "createdAt": "2025-08-31T20:40:53.889Z"
+    },
+    {
+      "story": {
+        "name": "Quest do Guga",
+        "description": "Uma quest de teste apenas para validar o uso remoto",
+        "reward": "CONFIANOPAI"
+      },
+      "steps": [
+        {
+          "id": "step-1",
+          "name": "MissÃ£o em Casa",
+          "description": "Essa Ã© fÃ¡cil, pra ver como Ã©.",
+          "coordinates": {
+            "x": 40.638768,
+            "y": -8.746177
+          },
+          "claimingRadius": 30,
+          "claimingWindow": {
+            "enabled": false,
+            "startDate": "",
+            "dueDate": ""
+          },
+          "reward": {
+            "enabled": true,
+            "code": "CASACOMPLETADA",
+            "limited": false,
+            "quantity": null
+          }
+        },
+        {
+          "id": "step-2",
+          "name": "Supermercado",
+          "description": "Pra caminhar um pouco",
+          "coordinates": {
+            "x": 40.638158,
+            "y": -8.746135
+          },
+          "claimingRadius": 25,
+          "claimingWindow": {
+            "enabled": false,
+            "startDate": "",
+            "dueDate": ""
+          },
+          "reward": {
+            "enabled": true,
+            "code": "PARADI",
+            "limited": false,
+            "quantity": null
+          }
+        },
+        {
+          "id": "step-3",
+          "name": "Rua da Praia",
+          "description": "Se estiver com calor, toma um Gelato",
+          "coordinates": {
+            "x": 40.640138,
+            "y": -8.746688
+          },
+          "claimingRadius": 35,
+          "claimingWindow": {
+            "enabled": false,
+            "startDate": "",
+            "dueDate": ""
+          },
+          "reward": {
+            "enabled": true,
+            "code": "GELATODIVANILLA",
+            "limited": false,
+            "quantity": null
+          }
+        }
+      ],
+      "id": "quest_1756678007510_4azd16zim",
+      "createdAt": "2025-08-31T22:06:47.510Z"
     }
   ],
   "metadata": {
     "version": "1.0",
-    "lastUpdated": "2025-08-31T20:40:53.889Z",
-    "totalQuests": 1
+    "lastUpdated": "2025-08-31T22:06:47.510Z",
+    "totalQuests": 2
   }
 }
