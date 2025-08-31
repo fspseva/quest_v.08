@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Quest Discovery</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="discovery-styles.css">
+</head>
+<body>
+    <div class="discovery-container">
+        <!-- Header with Search -->
+        <header class="discovery-header">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search for quests, locations..." class="search-input">
+                <button type="button" id="search-btn" class="search-btn">🔍</button>
+            </div>
+            <div class="header-actions">
+                <button type="button" id="view-toggle-btn" class="view-toggle-btn">📋 List View</button>
+                <button type="button" id="location-btn" class="location-btn">📍 Find Me</button>
+                <button type="button" id="db-menu-btn" class="db-menu-btn">🗄️ Database</button>
+                <a href="index.html" class="create-btn">+ Create Quest</a>
+            </div>
+            
+            <!-- Database Menu -->
+            <div id="database-menu" class="database-menu hidden">
+                <button type="button" id="export-db-btn" class="db-action-btn">📤 Export Database</button>
+                <button type="button" id="clear-db-btn" class="db-action-btn">🗑️ Clear Database</button>
+                <button type="button" id="clear-claims-btn" class="db-action-btn">🔄 Clear Claims</button>
+            </div>
+        </header>
+
+        <!-- View Container -->
+        <div id="view-container" class="view-container">
+            <!-- Map Container -->
+            <div id="map-container" class="map-container">
+                <div id="map" class="map"></div>
+                
+                <!-- Loading Overlay -->
+                <div id="loading-overlay" class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                    <p>Finding nearby quests...</p>
+                </div>
+            </div>
+
+            <!-- List Container -->
+            <div id="list-container" class="list-container hidden">
+                <div class="list-header">
+                    <div class="list-controls">
+                        <select id="sort-select" class="sort-select">
+                            <option value="distance">Sort by Distance</option>
+                            <option value="name">Sort by Name</option>
+                            <option value="story">Sort by Story</option>
+                            <option value="availability">Sort by Availability</option>
+                        </select>
+                        <select id="filter-select" class="filter-select">
+                            <option value="all">All Quests</option>
+                            <option value="available">Available</option>
+                            <option value="nearby">Nearby (within 1km)</option>
+                            <option value="claimed">Claimed</option>
+                            <option value="unclaimed">Not Claimed</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="quest-list" class="quest-list">
+                    <!-- Quest items will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Step Details Card -->
+        <div id="step-card" class="step-card">
+            <div class="card-header">
+                <div class="card-drag-handle"></div>
+                <button type="button" id="close-card" class="close-btn">×</button>
+            </div>
+            
+            <div class="card-content">
+                <div class="step-info">
+                    <h2 id="step-name" class="step-title">Step Name</h2>
+                    <p id="step-description" class="step-description">Step description goes here...</p>
+                    
+                    <div class="step-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Distance:</span>
+                            <span id="step-distance" class="meta-value">0.0 km</span>
+                        </div>
+                        
+                        <div id="step-timing" class="meta-item" style="display: none;">
+                            <span class="meta-label" id="timing-label">Available:</span>
+                            <span id="timing-value" class="meta-value">Now</span>
+                        </div>
+                        
+                        <div id="step-rewards" class="meta-item" style="display: none;">
+                            <span class="meta-label">Remaining Rewards:</span>
+                            <span id="rewards-count" class="meta-value">Unlimited</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-actions">
+                    <button type="button" id="directions-btn" class="btn btn-secondary">Get Directions</button>
+                    <button type="button" id="claim-btn" class="btn btn-primary">Claim Reward</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Claimed Reward Modal -->
+        <div id="reward-modal" class="reward-modal">
+            <div class="reward-modal-content">
+                <h2>🎉 Reward Claimed!</h2>
+                <div class="reward-code">
+                    <p>Your reward code:</p>
+                    <code id="claimed-reward-code">REWARD123</code>
+                </div>
+                <button type="button" id="close-reward-modal" class="btn btn-primary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="discovery-script.js"></script>
+</body>
+</html>

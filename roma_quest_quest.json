@@ -1,0 +1,51 @@
+{
+  "story": {
+    "name": "Roma Quest",
+    "description": "Essa é a quest da Av. de Roma",
+    "reward": "SEGREDINHO"
+  },
+  "steps": [
+    {
+      "id": "step-1",
+      "name": "Chico Esperto",
+      "description": "Aqui é um restaurante portugues",
+      "coordinates": {
+        "x": 38.748018,
+        "y": -9.141261
+      },
+      "claimingRadius": 25,
+      "claimingWindow": {
+        "enabled": false,
+        "startDate": "",
+        "dueDate": ""
+      },
+      "reward": {
+        "enabled": true,
+        "code": "PRESENTE DO CHICAO",
+        "limited": true,
+        "quantity": 5
+      }
+    },
+    {
+      "id": "step-2",
+      "name": "Continente",
+      "description": "Aqui é minha despensa",
+      "coordinates": {
+        "x": 38.747626,
+        "y": -9.140818
+      },
+      "claimingRadius": 100,
+      "claimingWindow": {
+        "enabled": true,
+        "startDate": "2025-08-23T10:48",
+        "dueDate": "2025-08-31T10:48"
+      },
+      "reward": {
+        "enabled": false,
+        "code": "",
+        "limited": false,
+        "quantity": null
+      }
+    }
+  ]
+}

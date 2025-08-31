@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Quest Creator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GPS Quest Creator</h1>
+            <p>Create interactive GPS-based treasure hunts and stories</p>
+        </header>
+        
+        <main>
+            <div id="quest-creator">
+                <div class="story-section">
+                    <h2>Story Creation</h2>
+                    
+                    <div class="form-group">
+                        <label for="story-name">Story Name</label>
+                        <input type="text" id="story-name" name="story-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="story-description">Story Description</label>
+                        <textarea id="story-description" name="story-description" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="story-reward">Story Reward Upon Completion</label>
+                        <input type="text" id="story-reward" name="story-reward" placeholder="Enter coupon code or reward">
+                        <small class="explainer">Story Rewards are individual unique coupon codes revealed to the user upon completion of every Step of a hunt.</small>
+                    </div>
+                </div>
+                
+                <div class="steps-section">
+                    <h2>Quest Steps</h2>
+                    <p class="explainer">A minimum of 1 step is mandatory to create a Story. Multiple steps can be added to a Story. Steps variables propagates to Story level, constraining to the earliest variable.</p>
+                    
+                    <div id="steps-container">
+                        <!-- Steps will be added here dynamically -->
+                    </div>
+                    
+                    <button type="button" id="add-step-btn" class="btn btn-secondary">Add Step</button>
+                </div>
+                
+                <div class="actions">
+                    <button type="button" id="save-quest-btn" class="btn btn-primary">Save Quest</button>
+                    <button type="button" id="preview-quest-btn" class="btn btn-secondary">Preview Quest</button>
+                    <a href="discovery.html" class="btn btn-secondary">🗺️ Discovery Mode</a>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
