@@ -1,6 +1,7 @@
 {
   "quests": [
     {
+      "id": "q1a2b3c4",
       "story": {
         "name": "Quest da Roma",
         "description": "3 missões fáceis na Roma",
@@ -8,7 +9,7 @@
       },
       "steps": [
         {
-          "id": "roma-step-1",
+          "id": "q1a2b3c4_s1",
           "name": "APE",
           "description": "Sem se mexer",
           "coordinates": {
@@ -29,7 +30,7 @@
           }
         },
         {
-          "id": "roma-step-2",
+          "id": "q1a2b3c4_s2",
           "name": "CONTINENTE",
           "description": "No continente",
           "coordinates": {
@@ -50,7 +51,7 @@
           }
         },
         {
-          "id": "roma-step-3",
+          "id": "q1a2b3c4_s3",
           "name": "LIXO",
           "description": "Spot do Lixo",
           "coordinates": {
@@ -71,10 +72,10 @@
           }
         }
       ],
-      "id": "quest_1756672853889_1qexpdhj1",
       "createdAt": "2025-08-31T20:40:53.889Z"
     },
     {
+      "id": "q5d6e7f8",
       "story": {
         "name": "Quest do Guga",
         "description": "Uma quest de teste apenas para validar o uso remoto",
@@ -82,7 +83,7 @@
       },
       "steps": [
         {
-          "id": "guga-step-1",
+          "id": "q5d6e7f8_s1",
           "name": "MissÃ£o em Casa",
           "description": "Essa Ã© fÃ¡cil, pra ver como Ã©.",
           "coordinates": {
@@ -103,7 +104,7 @@
           }
         },
         {
-          "id": "guga-step-2",
+          "id": "q5d6e7f8_s2",
           "name": "Supermercado",
           "description": "Pra caminhar um pouco",
           "coordinates": {
@@ -124,7 +125,7 @@
           }
         },
         {
-          "id": "guga-step-3",
+          "id": "q5d6e7f8_s3",
           "name": "Rua da Praia",
           "description": "Se estiver com calor, toma um Gelato",
           "coordinates": {
@@ -145,7 +146,6 @@
           }
         }
       ],
-      "id": "quest_1756678007510_4azd16zim",
       "createdAt": "2025-08-31T22:06:47.510Z"
     }
   ],
