@@ -1,0 +1,219 @@
+{
+  "schema_version": "1.0",
+  "description": "UNFOLDS - Enhanced database schema for geo-located stories",
+  "unfolds": [],
+  "steps": [],
+  "access_policies": [],
+  "claims": [],
+  "rewards": [],
+  "users": [],
+  "collaborators": [],
+  "moderation_queue": [],
+  "telemetry_events": [],
+  "schema_definitions": {
+    "unfold": {
+      "id": "string (UUIDv4)",
+      "title": "string",
+      "description": "string", 
+      "availability": "enum: public|private|restricted",
+      "status": "enum: draft|pending|approved|published|rejected|archived",
+      "cover_image": "string (URL)",
+      "author_id": "string (user_id)",
+      "access_policy_id": "string (references access_policies.id)",
+      "aggregated_metadata": {
+        "estimated_duration": "number (minutes)",
+        "difficulty": "enum: easy|medium|hard|epic",
+        "total_steps": "number",
+        "completion_count": "number",
+        "rating": "number (1-5)",
+        "total_distance": "number (meters)"
+      },
+      "time_window": {
+        "start_at": "datetime (ISO 8601)",
+        "due_at": "datetime (ISO 8601)",
+        "computed_from_steps": "boolean"
+      },
+      "story_reward": {
+        "enabled": "boolean",
+        "reward_type": "enum: coupon|badge|points",
+        "coupon_prefix": "string",
+        "expiration_hours": "number"
+      },
+      "created_at": "datetime (ISO 8601)",
+      "updated_at": "datetime (ISO 8601)",
+      "published_at": "datetime (ISO 8601)"
+    },
+    "step": {
+      "id": "string (UUIDv4)", 
+      "unfold_id": "string (references unfolds.id)",
+      "step_order": "number",
+      "name": "string",
+      "description": "string",
+      "geo": {
+        "lat": "number (decimal degrees)",
+        "lng": "number (decimal degrees)"
+      },
+      "claim_radius": "number (meters, default 25)",
+      "time_window": {
+        "start_at": "datetime (ISO 8601, optional)",
+        "due_at": "datetime (ISO 8601, optional)"
+      },
+      "step_reward": {
+        "enabled": "boolean",
+        "limited": "boolean",
+        "quantity": "number (null if unlimited)",
+        "remaining": "number",
+        "coupon_prefix": "string",
+        "expiration_hours": "number"
+      },
+      "created_at": "datetime (ISO 8601)"
+    },
+    "access_policy": {
+      "id": "string (UUIDv4)",
+      "type": "enum: public|link_qr_unlisted|restricted_group",
+      "configuration": {
+        "whitelist": "array of strings (emails)",
+        "credential_type": "enum: nft|id|sso",
+        "credential_config": "object (flexible based on type)"
+      },
+      "created_at": "datetime (ISO 8601)"
+    },
+    "claim": {
+      "id": "string (UUIDv4)",
+      "user_id": "string",
+      "unfold_id": "string (references unfolds.id)", 
+      "step_id": "string (references steps.id)",
+      "status": "enum: eligible|success|denied|exhausted|expired",
+      "location": {
+        "lat": "number",
+        "lng": "number",
+        "accuracy": "number (meters)"
+      },
+      "timestamp": "datetime (ISO 8601)",
+      "device_info": {
+        "user_agent": "string",
+        "platform": "string",
+        "mock_location_detected": "boolean",
+        "speed_kmh": "number"
+      },
+      "dwell_time": "number (seconds)",
+      "created_at": "datetime (ISO 8601)"
+    },
+    "reward": {
+      "id": "string (UUIDv4)",
+      "code": "string (cryptographically unique)",
+      "scope": "enum: step|story",
+      "user_id": "string",
+      "unfold_id": "string (references unfolds.id)",
+      "step_id": "string (references steps.id, null for story rewards)",
+      "claim_id": "string (references claims.id)",
+      "redeem_url": "string (optional)",
+      "expires_at": "datetime (ISO 8601, optional)",
+      "redeemed_at": "datetime (ISO 8601, optional)",
+      "issued_at": "datetime (ISO 8601)",
+      "hash": "string (salted hash for verification)"
+    },
+    "user": {
+      "id": "string (UUIDv4)",
+      "email": "string",
+      "username": "string",
+      "profile": {
+        "display_name": "string",
+        "avatar_url": "string",
+        "bio": "string"
+      },
+      "stats": {
+        "stories_created": "number",
+        "stories_completed": "number", 
+        "steps_completed": "number",
+        "total_distance_traveled": "number (meters)",
+        "rewards_earned": "number"
+      },
+      "preferences": {
+        "notifications": {
+          "geofence_alerts": "boolean",
+          "due_date_reminders": "boolean",
+          "reward_confirmations": "boolean"
+        }
+      },
+      "created_at": "datetime (ISO 8601)",
+      "last_active": "datetime (ISO 8601)"
+    },
+    "collaborator": {
+      "id": "string (UUIDv4)",
+      "unfold_id": "string (references unfolds.id)",
+      "user_id": "string (references users.id)",
+      "role": "enum: viewer|editor|co-creator",
+      "invited_by": "string (user_id)",
+      "invited_at": "datetime (ISO 8601)",
+      "accepted_at": "datetime (ISO 8601, optional)"
+    },
+    "moderation_item": {
+      "id": "string (UUIDv4)",
+      "unfold_id": "string (references unfolds.id)",
+      "submitted_by": "string (user_id)",
+      "submitted_at": "datetime (ISO 8601)",
+      "status": "enum: pending|approved|rejected|needs_adjustment",
+      "moderator_id": "string (user_id, optional)",
+      "moderator_notes": "string",
+      "reviewed_at": "datetime (ISO 8601, optional)",
+      "adjustments_requested": "array of objects"
+    },
+    "telemetry_event": {
+      "id": "string (UUIDv4)",
+      "event_type": "enum: view_map|open_unfold|start_unfold|arrive_radius|claim_attempt|claim_success|claim_denied|claim_expired|claim_exhausted|step_complete|unfold_complete|reward_issued|reward_viewed|share_link_qr",
+      "user_id": "string (optional for anonymous)",
+      "session_id": "string",
+      "unfold_id": "string (optional)",
+      "step_id": "string (optional)",
+      "geo_hash": "string (for privacy)",
+      "attributes": {
+        "accuracy": "number",
+        "network": "string",
+        "device": "string",
+        "custom": "object (flexible)"
+      },
+      "timestamp": "datetime (ISO 8601)"
+    }
+  },
+  "indexes": {
+    "unfolds": [
+      "status",
+      "availability", 
+      "author_id",
+      ["status", "availability"],
+      "geo_spatial_on_aggregated_center"
+    ],
+    "steps": [
+      "unfold_id",
+      ["unfold_id", "step_order"],
+      "geo_spatial_on_coordinates"
+    ],
+    "claims": [
+      "user_id",
+      "unfold_id",
+      "step_id",
+      ["user_id", "step_id"],
+      "timestamp"
+    ],
+    "rewards": [
+      "user_id",
+      "code",
+      "unfold_id",
+      "expires_at"
+    ],
+    "telemetry_events": [
+      "event_type",
+      "timestamp",
+      "user_id"
+    ]
+  },
+  "constraints": {
+    "unique_claim_per_user_step": "unique(user_id, step_id)",
+    "unique_reward_code": "unique(code)",
+    "step_order_unique_per_unfold": "unique(unfold_id, step_order)",
+    "valid_geo_coordinates": "lat BETWEEN -90 AND 90, lng BETWEEN -180 AND 180",
+    "positive_claim_radius": "claim_radius > 0",
+    "valid_time_windows": "start_at < due_at when both are set"
+  }
+}

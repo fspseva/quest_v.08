@@ -1,0 +1,447 @@
+{
+  "version": "2.0",
+  "last_updated": "2025-09-01T19:50:00.000Z",
+  "unfolds": [
+    {
+      "id": "uf_q1a2b3c4_migrated",
+      "title": "Quest da Roma",
+      "description": "3 missões fáceis na Roma",
+      "availability": "public",
+      "status": "published",
+      "cover_image": null,
+      "author_id": "user_demo_001",
+      "access_policy_id": "ap_public_default",
+      "aggregated_metadata": {
+        "estimated_duration": 45,
+        "difficulty": "easy",
+        "total_steps": 3,
+        "completion_count": 0,
+        "rating": 0,
+        "total_distance": 275
+      },
+      "time_window": {
+        "start_at": null,
+        "due_at": null,
+        "computed_from_steps": true
+      },
+      "story_reward": {
+        "enabled": true,
+        "reward_type": "coupon",
+        "coupon_prefix": "QUESTROMACOMPLETA",
+        "expiration_hours": null
+      },
+      "created_at": "2025-08-31T20:40:53.889Z",
+      "updated_at": "2025-08-31T20:40:53.889Z",
+      "published_at": "2025-08-31T20:40:53.889Z"
+    },
+    {
+      "id": "uf_q5d6e7f8_migrated",
+      "title": "Quest do Guga",
+      "description": "Uma quest de teste apenas para validar o uso remoto",
+      "availability": "public",
+      "status": "published",
+      "cover_image": null,
+      "author_id": "user_demo_002",
+      "access_policy_id": "ap_public_default",
+      "aggregated_metadata": {
+        "estimated_duration": 30,
+        "difficulty": "easy",
+        "total_steps": 3,
+        "completion_count": 0,
+        "rating": 0,
+        "total_distance": 320
+      },
+      "time_window": {
+        "start_at": null,
+        "due_at": null,
+        "computed_from_steps": true
+      },
+      "story_reward": {
+        "enabled": true,
+        "reward_type": "coupon",
+        "coupon_prefix": "CONFIANOPAI",
+        "expiration_hours": null
+      },
+      "created_at": "2025-08-31T22:06:47.510Z",
+      "updated_at": "2025-08-31T22:06:47.510Z",
+      "published_at": "2025-08-31T22:06:47.510Z"
+    }
+  ],
+  "steps": [
+    {
+      "id": "st_q1a2b3c4_s1_migrated",
+      "unfold_id": "uf_q1a2b3c4_migrated",
+      "step_order": 1,
+      "name": "APE",
+      "description": "Sem se mexer",
+      "geo": {
+        "lat": 38.747948,
+        "lng": -9.141201
+      },
+      "claim_radius": 25,
+      "time_window": {
+        "start_at": null,
+        "due_at": null
+      },
+      "step_reward": {
+        "enabled": true,
+        "limited": false,
+        "quantity": null,
+        "remaining": null,
+        "coupon_prefix": "APECOMPLETO",
+        "expiration_hours": null
+      },
+      "created_at": "2025-08-31T20:40:53.889Z"
+    },
+    {
+      "id": "st_q1a2b3c4_s2_migrated",
+      "unfold_id": "uf_q1a2b3c4_migrated",
+      "step_order": 2,
+      "name": "CONTINENTE",
+      "description": "No continente",
+      "geo": {
+        "lat": 38.747628,
+        "lng": -9.140848
+      },
+      "claim_radius": 50,
+      "time_window": {
+        "start_at": null,
+        "due_at": null
+      },
+      "step_reward": {
+        "enabled": true,
+        "limited": false,
+        "quantity": null,
+        "remaining": null,
+        "coupon_prefix": "CONTINENTE COMPLETO",
+        "expiration_hours": null
+      },
+      "created_at": "2025-08-31T20:40:53.889Z"
+    },
+    {
+      "id": "st_q1a2b3c4_s3_migrated",
+      "unfold_id": "uf_q1a2b3c4_migrated",
+      "step_order": 3,
+      "name": "LIXO",
+      "description": "Spot do Lixo",
+      "geo": {
+        "lat": 38.746628,
+        "lng": -9.14083
+      },
+      "claim_radius": 100,
+      "time_window": {
+        "start_at": null,
+        "due_at": null
+      },
+      "step_reward": {
+        "enabled": true,
+        "limited": false,
+        "quantity": null,
+        "remaining": null,
+        "coupon_prefix": "LIXO COMPLETO",
+        "expiration_hours": null
+      },
+      "created_at": "2025-08-31T20:40:53.889Z"
+    },
+    {
+      "id": "st_q5d6e7f8_s1_migrated",
+      "unfold_id": "uf_q5d6e7f8_migrated",
+      "step_order": 1,
+      "name": "Missão em Casa",
+      "description": "Essa é fácil, pra ver como é.",
+      "geo": {
+        "lat": 40.638768,
+        "lng": -8.746177
+      },
+      "claim_radius": 30,
+      "time_window": {
+        "start_at": null,
+        "due_at": null
+      },
+      "step_reward": {
+        "enabled": true,
+        "limited": false,
+        "quantity": null,
+        "remaining": null,
+        "coupon_prefix": "CASACOMPLETADA",
+        "expiration_hours": null
+      },
+      "created_at": "2025-08-31T22:06:47.510Z"
+    },
+    {
+      "id": "st_q5d6e7f8_s2_migrated",
+      "unfold_id": "uf_q5d6e7f8_migrated",
+      "step_order": 2,
+      "name": "Supermercado",
+      "description": "Pra caminhar um pouco",
+      "geo": {
+        "lat": 40.638158,
+        "lng": -8.746135
+      },
+      "claim_radius": 25,
+      "time_window": {
+        "start_at": null,
+        "due_at": null
+      },
+      "step_reward": {
+        "enabled": true,
+        "limited": false,
+        "quantity": null,
+        "remaining": null,
+        "coupon_prefix": "PARADI",
+        "expiration_hours": null
+      },
+      "created_at": "2025-08-31T22:06:47.510Z"
+    },
+    {
+      "id": "st_q5d6e7f8_s3_migrated",
+      "unfold_id": "uf_q5d6e7f8_migrated",
+      "step_order": 3,
+      "name": "Rua da Praia",
+      "description": "Se estiver com calor, toma um Gelato",
+      "geo": {
+        "lat": 40.640138,
+        "lng": -8.746688
+      },
+      "claim_radius": 35,
+      "time_window": {
+        "start_at": null,
+        "due_at": null
+      },
+      "step_reward": {
+        "enabled": true,
+        "limited": false,
+        "quantity": null,
+        "remaining": null,
+        "coupon_prefix": "GELATODIVANILLA",
+        "expiration_hours": null
+      },
+      "created_at": "2025-08-31T22:06:47.510Z"
+    }
+  ],
+  "access_policies": [
+    {
+      "id": "ap_public_default",
+      "type": "public",
+      "configuration": {},
+      "created_at": "2025-09-01T19:50:00.000Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "user_demo_001",
+      "email": "demo1@unfolds.app",
+      "username": "roma_creator",
+      "profile": {
+        "display_name": "Roma Creator",
+        "avatar_url": null,
+        "bio": "Creating stories in beautiful Roma"
+      },
+      "stats": {
+        "stories_created": 1,
+        "stories_completed": 0,
+        "steps_completed": 0,
+        "total_distance_traveled": 0,
+        "rewards_earned": 0
+      },
+      "preferences": {
+        "notifications": {
+          "geofence_alerts": true,
+          "due_date_reminders": true,
+          "reward_confirmations": true
+        }
+      },
+      "created_at": "2025-08-31T20:00:00.000Z",
+      "last_active": "2025-08-31T20:40:53.889Z"
+    },
+    {
+      "id": "user_demo_002",
+      "email": "demo2@unfolds.app",
+      "username": "guga_tester",
+      "profile": {
+        "display_name": "Guga Tester",
+        "avatar_url": null,
+        "bio": "Testing the remote validation system"
+      },
+      "stats": {
+        "stories_created": 1,
+        "stories_completed": 0,
+        "steps_completed": 0,
+        "total_distance_traveled": 0,
+        "rewards_earned": 0
+      },
+      "preferences": {
+        "notifications": {
+          "geofence_alerts": true,
+          "due_date_reminders": true,
+          "reward_confirmations": true
+        }
+      },
+      "created_at": "2025-08-31T21:00:00.000Z",
+      "last_active": "2025-08-31T22:06:47.510Z"
+    }
+  ],
+  "claims": [],
+  "rewards": [],
+  "collaborators": [],
+  "moderation_queue": [],
+  "telemetry_events": [],
+  "legacy": {
+    "note": "Original quest data structure maintained for backward compatibility",
+    "quests": [
+      {
+        "id": "q1a2b3c4",
+        "story": {
+          "name": "Quest da Roma",
+          "description": "3 missões fáceis na Roma",
+          "reward": "QUESTROMACOMPLETA"
+        },
+        "steps": [
+          {
+            "id": "q1a2b3c4_s1",
+            "name": "APE",
+            "description": "Sem se mexer",
+            "coordinates": {
+              "x": 38.747948,
+              "y": -9.141201
+            },
+            "claimingRadius": 25,
+            "claimingWindow": {
+              "enabled": false,
+              "startDate": "",
+              "dueDate": ""
+            },
+            "reward": {
+              "enabled": true,
+              "code": "APECOMPLETO",
+              "limited": false,
+              "quantity": null
+            }
+          },
+          {
+            "id": "q1a2b3c4_s2",
+            "name": "CONTINENTE",
+            "description": "No continente",
+            "coordinates": {
+              "x": 38.747628,
+              "y": -9.140848
+            },
+            "claimingRadius": 50,
+            "claimingWindow": {
+              "enabled": false,
+              "startDate": "",
+              "dueDate": ""
+            },
+            "reward": {
+              "enabled": true,
+              "code": "CONTINENTE COMPLETO",
+              "limited": false,
+              "quantity": null
+            }
+          },
+          {
+            "id": "q1a2b3c4_s3",
+            "name": "LIXO",
+            "description": "Spot do Lixo",
+            "coordinates": {
+              "x": 38.746628,
+              "y": -9.14083
+            },
+            "claimingRadius": 100,
+            "claimingWindow": {
+              "enabled": false,
+              "startDate": "",
+              "dueDate": ""
+            },
+            "reward": {
+              "enabled": true,
+              "code": "LIXO COMPLETO",
+              "limited": false,
+              "quantity": null
+            }
+          }
+        ],
+        "createdAt": "2025-08-31T20:40:53.889Z"
+      },
+      {
+        "id": "q5d6e7f8",
+        "story": {
+          "name": "Quest do Guga",
+          "description": "Uma quest de teste apenas para validar o uso remoto",
+          "reward": "CONFIANOPAI"
+        },
+        "steps": [
+          {
+            "id": "q5d6e7f8_s1",
+            "name": "MissÃ£o em Casa",
+            "description": "Essa Ã© fÃ¡cil, pra ver como Ã©.",
+            "coordinates": {
+              "x": 40.638768,
+              "y": -8.746177
+            },
+            "claimingRadius": 30,
+            "claimingWindow": {
+              "enabled": false,
+              "startDate": "",
+              "dueDate": ""
+            },
+            "reward": {
+              "enabled": true,
+              "code": "CASACOMPLETADA",
+              "limited": false,
+              "quantity": null
+            }
+          },
+          {
+            "id": "q5d6e7f8_s2",
+            "name": "Supermercado",
+            "description": "Pra caminhar um pouco",
+            "coordinates": {
+              "x": 40.638158,
+              "y": -8.746135
+            },
+            "claimingRadius": 25,
+            "claimingWindow": {
+              "enabled": false,
+              "startDate": "",
+              "dueDate": ""
+            },
+            "reward": {
+              "enabled": true,
+              "code": "PARADI",
+              "limited": false,
+              "quantity": null
+            }
+          },
+          {
+            "id": "q5d6e7f8_s3",
+            "name": "Rua da Praia",
+            "description": "Se estiver com calor, toma um Gelato",
+            "coordinates": {
+              "x": 40.640138,
+              "y": -8.746688
+            },
+            "claimingRadius": 35,
+            "claimingWindow": {
+              "enabled": false,
+              "startDate": "",
+              "dueDate": ""
+            },
+            "reward": {
+              "enabled": true,
+              "code": "GELATODIVANILLA",
+              "limited": false,
+              "quantity": null
+            }
+          }
+        ],
+        "createdAt": "2025-08-31T22:06:47.510Z"
+      }
+    ],
+    "metadata": {
+      "version": "1.0",
+      "lastUpdated": "2025-08-31T22:06:47.510Z",
+      "totalQuests": 2
+    }
+  }
+}

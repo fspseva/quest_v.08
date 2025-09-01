@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNFOLDS - Story Creator</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .creator-form {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .explainer {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="datetime-local"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="datetime-local"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .availability-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .availability-card {
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .availability-card:hover {
+            border-color: #FFD700;
+            transform: translateY(-2px);
+        }
+
+        .availability-card.selected {
+            border-color: #FFD700;
+            background: #FFF8E1;
+        }
+
+        .availability-card h4 {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .private-options {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .private-options.show {
+            display: block;
+        }
+
+        .privacy-type {
+            margin-bottom: 20px;
+        }
+
+        .privacy-card {
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .privacy-card:hover {
+            border-color: #FFD700;
+        }
+
+        .privacy-card.selected {
+            border-color: #FFD700;
+            background: #FFF8E1;
+        }
+
+        .group-access {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .group-access.show {
+            display: block;
+        }
+
+        .steps-section {
+            margin-top: 40px;
+        }
+
+        .step-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid #e1e5e9;
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .coordinates-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .limited-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .limited-section.show {
+            display: block;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .map-container {
+            height: 300px;
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .creator-form {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .coordinates-group {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+
+        .validation-error {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input,
+        .form-group.error textarea,
+        .form-group.error select {
+            border-color: #dc3545;
+        }
+
+        .form-group.error .validation-error {
+            display: block;
+        }
+
+        .upload-area {
+            border: 2px dashed #e1e5e9;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #FFD700;
+        }
+
+        .upload-area.dragover {
+            border-color: #FFD700;
+            background: #FFF8E1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>UNFOLDS</h1>
+            <p>Create geo-located stories that unfold step by step</p>
+        </div>
+
+        <div class="creator-form">
+            <form id="unfoldForm">
+                <!-- Story Basic Information -->
+                <div class="form-group">
+                    <label for="storyName">Story Name</label>
+                    <input type="text" id="storyName" name="storyName" required>
+                    <div class="validation-error">Story name is required</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="storyDescription">Story Description</label>
+                    <textarea id="storyDescription" name="storyDescription" required></textarea>
+                    <div class="validation-error">Story description is required</div>
+                </div>
+
+                <!-- Availability Section -->
+                <div class="form-group">
+                    <label>Availability</label>
+                    <div class="availability-options">
+                        <div class="availability-card" data-value="public">
+                            <h4>🌍 Public Story</h4>
+                            <p>Visible on the public map after moderation approval</p>
+                        </div>
+                        <div class="availability-card" data-value="private">
+                            <h4>🔒 Private Story</h4>
+                            <p>Access controlled by privacy settings</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Private Story Options -->
+                <div id="privateOptions" class="private-options">
+                    <h4>Privacy Type</h4>
+                    <div class="privacy-type">
+                        <div class="privacy-card" data-value="link_qr">
+                            <h5>🔗 Link/QR only</h5>
+                            <span class="explainer">The story does not appear on the public map. Only users with the link or QR code can access it.</span>
+                        </div>
+                        <div class="privacy-card" data-value="restricted_group">
+                            <h5>👥 Restricted Group</h5>
+                            <span class="explainer">The story only appears to authorized users.</span>
+                            <div id="groupAccess" class="group-access">
+                                <div class="form-group">
+                                    <label>Group Access Method</label>
+                                    <select id="groupAccessMethod">
+                                        <option value="">Select access method...</option>
+                                        <option value="whitelist">Upload whitelist (CSV with emails)</option>
+                                        <option value="nft">Connect with NFT credential</option>
+                                        <option value="id">Connect with ID credential</option>
+                                        <option value="sso">Connect with SSO login</option>
+                                    </select>
+                                </div>
+                                <div id="whitelistUpload" class="upload-area" style="display: none;">
+                                    <p>📄 Drop your CSV file here or click to upload</p>
+                                    <small>CSV should contain one email per line</small>
+                                    <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story Reward -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="storyReward" name="storyReward" checked>
+                        <label for="storyReward">Story Reward Upon Completion</label>
+                    </div>
+                    <span class="explainer">Story Rewards are individual unique coupon codes revealed to the user upon completion of every Step of a hunt.</span>
+                </div>
+
+                <!-- Steps Section -->
+                <div class="steps-section">
+                    <h3>Story Steps</h3>
+                    <span class="explainer">A minimum of 1 step is mandatory to create a Story. Multiple steps can be added to a Story. Steps variables propagate to Story level, constraining to the earliest variable.</span>
+                    
+                    <div id="stepsContainer">
+                        <!-- Steps will be dynamically added here -->
+                    </div>
+
+                    <button type="button" id="addStepBtn" class="btn btn-success">+ Add Step</button>
+                </div>
+
+                <!-- Actions -->
+                <div class="actions">
+                    <button type="button" id="previewBtn" class="btn btn-secondary">👁️ Preview</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary">💾 Save as Draft</button>
+                    <button type="button" id="publishBtn" class="btn btn-primary">🚀 Publish Story</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Step Template (hidden) -->
+    <template id="stepTemplate">
+        <div class="step-card">
+            <div class="step-header">
+                <div style="display: flex; align-items: center;">
+                    <div class="step-number">1</div>
+                    <h4>Step <span class="step-num">1</span></h4>
+                </div>
+                <button type="button" class="btn btn-danger remove-step" style="padding: 8px 12px;">🗑️ Remove</button>
+            </div>
+
+            <div class="form-group">
+                <label>Step Name</label>
+                <input type="text" class="step-name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Step Description</label>
+                <textarea class="step-description" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>GPS Coordinates</label>
+                <div class="coordinates-group">
+                    <div>
+                        <label>Latitude (X):</label>
+                        <input type="number" class="step-lat" step="any" required>
+                    </div>
+                    <div>
+                        <label>Longitude (Y):</label>
+                        <input type="number" class="step-lng" step="any" required>
+                    </div>
+                    <button type="button" class="btn btn-secondary use-current-location">📍 Use Current</button>
+                </div>
+                <div class="map-container"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Claiming Radius (meters)</label>
+                <input type="number" class="step-radius" value="25" min="5" max="1000" required>
+                <span class="explainer">Claiming radius is the area where the claiming becomes available.</span>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" class="claiming-window-enabled">
+                    <label>Enable Claiming Window</label>
+                </div>
+                <span class="explainer">Claiming window is the due date where the claiming becomes available.</span>
+                <div class="claiming-window-section" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div>
+                            <label>Start Date</label>
+                            <input type="datetime-local" class="step-start-date">
+                        </div>
+                        <div>
+                            <label>Due Date</label>
+                            <input type="datetime-local" class="step-due-date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" class="step-reward-enabled">
+                    <label>Enable Step Reward</label>
+                </div>
+                <span class="explainer">Step Rewards are individual unique coupon codes revealed to the user upon claiming.</span>
+                <div class="step-reward-section" style="display: none;">
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="step-reward-limited">
+                        <label>Limited Rewards</label>
+                    </div>
+                    <div class="limited-section">
+                        <label>Quantity Available</label>
+                        <input type="number" class="step-reward-quantity" min="1" value="10">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="unfolds-creator.js"></script>
+</body>
+</html>
