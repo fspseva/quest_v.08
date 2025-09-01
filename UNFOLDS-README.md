@@ -8,6 +8,7 @@ UNFOLDS is a comprehensive mobile-first platform for creating and discovering ge
 | **Story Creator** | Author new geo-located stories with interactive maps | **[📝 Create Story](unfolds-creator.html)** |
 | **Story Discovery** | Explore stories on an interactive map with mobile-first design | **[🗺️ Discover Stories](unfolds-discovery.html)** |
 | **User Profile** | Manage your stories, view achievements, and track rewards | **[👤 My Profile](unfolds-profile.html)** |
+| **Moderation Dashboard** | Review and approve/reject public stories | **[⚖️ Moderation](unfolds-moderation.html)** |
 | **Legacy Creator** | Original quest creation interface (backward compatibility) | **[⚙️ Legacy Creator](index.html)** |
 | **Legacy Discovery** | Original discovery interface | **[🔍 Legacy Discovery](discovery.html)** |
 
@@ -53,6 +54,7 @@ UNFOLDS Implementation/
 - **[📝 Story Creator](unfolds-creator.html)** - Create new geo-located stories
 - **[🗺️ Story Discovery](unfolds-discovery.html)** - Explore and discover stories on the map
 - **[👤 User Profile](unfolds-profile.html)** - Manage your stories, achievements, and rewards
+- **[⚖️ Moderation Dashboard](unfolds-moderation.html)** - Review and approve/reject public stories
 
 ### 1. Story Creation
 ```bash
@@ -92,6 +94,19 @@ open unfolds-profile.html
 4. **Rewards Inventory**: View earned coupon codes
 5. **Achievements**: Unlock badges for various activities
 6. **Settings**: Configure notifications and preferences
+
+### 4. Story Moderation
+```bash
+# Open the moderation dashboard
+open unfolds-moderation.html
+```
+
+1. **Review Queue**: View all stories pending approval
+2. **Story Preview**: Interactive maps and detailed step information
+3. **Approval Actions**: Approve, reject, or request changes
+4. **Review History**: Track all moderation decisions
+5. **Priority System**: High/medium/low priority based on story attributes
+6. **Statistics Dashboard**: Monitor daily approval/rejection metrics
 
 ## 📋 Core Modules
 

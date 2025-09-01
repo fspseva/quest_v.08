@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNFOLDS - Moderation Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #FFD700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .moderation-dashboard {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 10px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-tab:hover,
+        .filter-tab.active {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.1);
+            color: #333;
+        }
+
+        .stories-queue {
+            display: grid;
+            gap: 20px;
+        }
+
+        .story-review-card {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .story-review-card:hover {
+            border-color: #FFD700;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
+        }
+
+        .story-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .story-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .story-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .priority-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .priority-high { background: rgba(244, 67, 54, 0.2); color: #f44336; }
+        .priority-medium { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+        .priority-low { background: rgba(76, 175, 80, 0.2); color: #4CAF50; }
+
+        .story-content {
+            margin-bottom: 20px;
+        }
+
+        .story-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .steps-preview {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .step-details {
+            flex: 1;
+        }
+
+        .step-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .step-location {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .map-preview {
+            height: 200px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .moderation-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-approve {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-reject {
+            background: linear-gradient(135deg, #f44336, #da190b);
+            color: white;
+        }
+
+        .btn-adjust {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+        }
+
+        .btn-preview {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .review-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .review-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input {
+            width: auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .moderation-dashboard {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .story-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .moderation-actions {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .stats-bar {
+                gap: 15px;
+            }
+        }
+
+        .notification-banner {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .notification-banner.show {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-top: 3px solid #FFD700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>UNFOLDS</h1>
+            <div class="subtitle">Moderation Dashboard</div>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="pendingCount">0</div>
+                    <div class="stat-label">Pending Review</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="approvedToday">0</div>
+                    <div class="stat-label">Approved Today</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="rejectedToday">0</div>
+                    <div class="stat-label">Rejected Today</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="avgReviewTime">0</div>
+                    <div class="stat-label">Avg Review Time (min)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="moderation-dashboard">
+            <div class="notification-banner" id="notificationBanner">
+                <strong>Success!</strong> <span id="notificationText"></span>
+            </div>
+
+            <div class="filter-tabs">
+                <div class="filter-tab active" data-filter="pending">📋 Pending Review</div>
+                <div class="filter-tab" data-filter="approved">✅ Recently Approved</div>
+                <div class="filter-tab" data-filter="rejected">❌ Recently Rejected</div>
+                <div class="filter-tab" data-filter="all">📊 All Stories</div>
+            </div>
+
+            <div id="storiesContainer" class="stories-queue">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div>Loading stories for review...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Action Modal -->
+    <div class="review-modal" id="reviewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Review Story</h3>
+                <button class="close-modal" id="closeModal">×</button>
+            </div>
+            
+            <div id="modalContent">
+                <div class="form-group">
+                    <label for="reviewNotes">Review Notes</label>
+                    <textarea id="reviewNotes" placeholder="Add your review comments here..."></textarea>
+                </div>
+
+                <div id="adjustmentOptions" style="display: none;">
+                    <h4>Adjustment Requests:</h4>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="adjustTitle" value="title">
+                            <label for="adjustTitle">Update title</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="adjustDescription" value="description">
+                            <label for="adjustDescription">Improve description</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="adjustSteps" value="steps">
+                            <label for="adjustSteps">Revise step locations</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="adjustContent" value="content">
+                            <label for="adjustContent">Content quality issues</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="adjustAccess" value="access">
+                            <label for="adjustAccess">Access/privacy settings</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="moderation-actions" style="margin-top: 20px;">
+                    <button class="btn btn-preview" id="cancelAction">Cancel</button>
+                    <button class="btn btn-approve" id="confirmAction">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="unfolds-moderation.js"></script>
+</body>
+</html>
