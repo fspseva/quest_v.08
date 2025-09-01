@@ -462,9 +462,19 @@ class UnfoldsDiscovery {
                     <div>
                         <strong>${step.name}</strong><br>
                         <em>${story.title}</em><br>
-                        ${step.description}
+                        ${step.description}<br>
+                        <small style="color: #FFD700; font-weight: 500;">📍 Claiming radius: ${step.claim_radius || 25}m</small>
                     </div>
                 `);
+
+                // Add claiming radius circle
+                const circle = L.circle([step.geo.lat, step.geo.lng], {
+                    color: '#FFD700',
+                    fillColor: '#FFD700',
+                    fillOpacity: 0.1,
+                    radius: step.claim_radius || 25,
+                    weight: 2
+                }).addTo(this.map);
 
                 // Click handler
                 marker.on('click', () => {
@@ -472,6 +482,7 @@ class UnfoldsDiscovery {
                 });
 
                 this.markers.push(marker);
+                this.markers.push(circle);
             });
         });
     }
@@ -512,10 +523,11 @@ class UnfoldsDiscovery {
             ${story.steps ? `
                 <div>
                     <h4>Steps Preview:</h4>
-                    ${story.steps.slice(0, 3).map(step => `
+                    ${story.steps.slice(0, 3).map((step, index) => `
                         <div style="margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                            <strong>${step.name}</strong><br>
-                            <small>${step.description}</small>
+                            <strong>Step ${index + 1}: ${step.name}</strong><br>
+                            <small style="color: rgba(255,255,255,0.7);">${step.description}</small><br>
+                            <small style="color: #FFD700; font-weight: 500;">📍 Claiming radius: ${step.claim_radius || 25}m</small>
                         </div>
                     `).join('')}
                     ${story.steps.length > 3 ? '<small>... and more</small>' : ''}
