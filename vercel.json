@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "public": true,
+  "trailingSlash": false,
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "geolocation=*, camera=(), microphone=(), payment=()"
+        }
+      ]
+    },
+    {
+      "source": "/unfolds-database.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    },
+    {
+      "source": "/database.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/stories",
+      "destination": "/unfolds-database.json"
+    },
+    {
+      "source": "/api/legacy-quests", 
+      "destination": "/database.json"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/discovery",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/quest-creator",
+      "destination": "/unfolds-creator.html",
+      "permanent": true
+    }
+  ]
+}
