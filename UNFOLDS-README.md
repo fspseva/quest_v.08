@@ -5,11 +5,11 @@ UNFOLDS is a comprehensive mobile-first platform for creating and discovering ge
 ## 🚀 Quick Navigation
 | Module | Description | Launch |
 |--------|-------------|--------|
+| **Story Discovery** | Explore stories on an interactive map with mobile-first design | **[🗺️ Discover Stories](index.html)** |
 | **Story Creator** | Author new geo-located stories with interactive maps | **[📝 Create Story](unfolds-creator.html)** |
-| **Story Discovery** | Explore stories on an interactive map with mobile-first design | **[🗺️ Discover Stories](unfolds-discovery.html)** |
 | **User Profile** | Manage your stories, view achievements, and track rewards | **[👤 My Profile](unfolds-profile.html)** |
 | **Moderation Dashboard** | Review and approve/reject public stories | **[⚖️ Moderation](unfolds-moderation.html)** |
-| **Legacy Creator** | Original quest creation interface (backward compatibility) | **[⚙️ Legacy Creator](index.html)** |
+| **Legacy Creator** | Original quest creation interface (backward compatibility) | **[⚙️ Legacy Creator](legacy-creator.html)** |
 | **Legacy Discovery** | Original discovery interface | **[🔍 Legacy Discovery](discovery.html)** |
 
 ## 🌟 Features Overview
@@ -34,25 +34,27 @@ UNFOLDS is a comprehensive mobile-first platform for creating and discovering ge
 
 ```
 UNFOLDS Implementation/
-├── unfolds-schema.json          # Complete database schema definition
-├── unfolds-database.json        # Enhanced database with UNFOLDS structure
+├── index.html                  # Story Discovery Module (Main App Entry Point)
+├── unfolds-discovery.js        # Discovery and map functionality
 ├── unfolds-creator.html         # Story Creation Module interface
 ├── unfolds-creator.js          # Story creation functionality
-├── unfolds-discovery.html      # Story Discovery Module interface  
-├── unfolds-discovery.js        # Discovery and map functionality
 ├── unfolds-profile.html        # User Profile Module interface
 ├── unfolds-profile.js          # Profile management functionality
-├── database.json              # Legacy quest data (backward compatibility)
+├── unfolds-moderation.html     # Moderation Dashboard interface
+├── unfolds-moderation.js       # Moderation workflow functionality
+├── unfolds-schema.json          # Complete database schema definition
+├── unfolds-database.json        # Enhanced database with UNFOLDS structure
+├── legacy-creator.html         # Legacy quest creator (renamed from index.html)
 ├── discovery.html             # Legacy discovery interface
-├── index.html                 # Legacy quest creator
+├── database.json              # Legacy quest data (backward compatibility)
 └── UNFOLDS-README.md          # This documentation
 ```
 
 ## 🚀 Quick Start
 
 ### 📱 Live Demo Links
+- **[🗺️ Story Discovery](index.html)** - Explore and discover stories on the map (Main App)
 - **[📝 Story Creator](unfolds-creator.html)** - Create new geo-located stories
-- **[🗺️ Story Discovery](unfolds-discovery.html)** - Explore and discover stories on the map
 - **[👤 User Profile](unfolds-profile.html)** - Manage your stories, achievements, and rewards
 - **[⚖️ Moderation Dashboard](unfolds-moderation.html)** - Review and approve/reject public stories
 
@@ -71,8 +73,8 @@ open unfolds-creator.html
 
 ### 2. Story Discovery  
 ```bash
-# Open the discovery interface
-open unfolds-discovery.html
+# Open the main app (discovery interface)
+open index.html
 ```
 
 1. **Map Exploration**: Browse stories on an interactive map
@@ -110,25 +112,7 @@ open unfolds-moderation.html
 
 ## 📋 Core Modules
 
-### 1. Story Creation Module (`unfolds-creator.html`)
-
-**Purpose**: Comprehensive interface for authoring geo-located stories
-
-**Key Features**:
-- Interactive step-by-step form with validation
-- Integrated map for GPS coordinate selection  
-- Flexible privacy and access control options
-- Real-time preview functionality
-- CSV upload for restricted group whitelists
-- Mobile-responsive design with current location detection
-
-**Technical Implementation**:
-- Vanilla JavaScript with Leaflet.js for mapping
-- Form validation with real-time error feedback
-- Local storage for draft management
-- Mobile geolocation API integration
-
-### 2. Story Discovery Module (`unfolds-discovery.html`)
+### 1. Story Discovery Module (`index.html`)
 
 **Purpose**: Mobile-first map interface for finding and engaging with stories
 
@@ -146,6 +130,24 @@ open unfolds-moderation.html
 - Geolocation tracking with accuracy validation
 - Dynamic marker generation based on story status
 - Progressive loading of nearby content
+
+### 2. Story Creation Module (`unfolds-creator.html`)
+
+**Purpose**: Comprehensive interface for authoring geo-located stories
+
+**Key Features**:
+- Interactive step-by-step form with validation
+- Integrated map for GPS coordinate selection  
+- Flexible privacy and access control options
+- Real-time preview functionality
+- CSV upload for restricted group whitelists
+- Mobile-responsive design with current location detection
+
+**Technical Implementation**:
+- Vanilla JavaScript with Leaflet.js for mapping
+- Form validation with real-time error feedback
+- Local storage for draft management
+- Mobile geolocation API integration
 
 ### 3. Profile Module (`unfolds-profile.html`)
 
@@ -320,9 +322,10 @@ A step becomes claimable when:
 python -m http.server 8000
 
 # Access modules
-http://localhost:8000/unfolds-creator.html
-http://localhost:8000/unfolds-discovery.html  
-http://localhost:8000/unfolds-profile.html
+http://localhost:8000/index.html              # Main App (Story Discovery)
+http://localhost:8000/unfolds-creator.html    # Story Creator
+http://localhost:8000/unfolds-profile.html    # User Profile
+http://localhost:8000/unfolds-moderation.html # Moderation Dashboard
 ```
 
 ### Testing Workflow

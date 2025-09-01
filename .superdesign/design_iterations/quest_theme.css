@@ -1,0 +1,63 @@
+:root {
+  --background: oklch(0.98 0.01 240);
+  --foreground: oklch(0.25 0.02 240);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.02 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0.02 240);
+  --primary: oklch(0.65 0.18 196);
+  --primary-foreground: oklch(0.98 0.01 240);
+  --secondary: oklch(0.92 0.05 130);
+  --secondary-foreground: oklch(0.3 0.05 130);
+  --muted: oklch(0.95 0.01 240);
+  --muted-foreground: oklch(0.5 0.02 240);
+  --accent: oklch(0.8 0.12 90);
+  --accent-foreground: oklch(0.2 0.05 90);
+  --destructive: oklch(0.7 0.2 30);
+  --destructive-foreground: oklch(0.98 0.01 240);
+  --border: oklch(0.85 0.02 240);
+  --input: oklch(0.85 0.02 240);
+  --ring: oklch(0.65 0.18 196);
+  --chart-1: oklch(0.65 0.18 196);
+  --chart-2: oklch(0.7 0.15 150);
+  --chart-3: oklch(0.75 0.15 90);
+  --chart-4: oklch(0.6 0.15 45);
+  --chart-5: oklch(0.55 0.15 270);
+  --sidebar: oklch(0.98 0.01 240);
+  --sidebar-foreground: oklch(0.25 0.02 240);
+  --sidebar-primary: oklch(0.65 0.18 196);
+  --sidebar-primary-foreground: oklch(0.98 0.01 240);
+  --sidebar-accent: oklch(0.8 0.12 90);
+  --sidebar-accent-foreground: oklch(0.2 0.05 90);
+  --sidebar-border: oklch(0.85 0.02 240);
+  --sidebar-ring: oklch(0.65 0.18 196);
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Merriweather', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 0.75rem;
+  --shadow-2xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-2xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 0.25rem);
+  --radius-xl: calc(var(--radius) + 0.5rem);
+  
+  /* Quest-specific colors */
+  --quest-easy: oklch(0.7 0.15 150);
+  --quest-medium: oklch(0.75 0.15 90);
+  --quest-hard: oklch(0.6 0.15 45);
+  --quest-epic: oklch(0.55 0.15 270);
+  
+  /* Map-specific variables */
+  --map-marker-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --map-control-bg: rgba(255, 255, 255, 0.9);
+}

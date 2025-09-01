@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Discovery App</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Merriweather:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --background: oklch(0.98 0.01 240);
+            --foreground: oklch(0.25 0.02 240);
+            --card: oklch(1 0 0);
+            --card-foreground: oklch(0.25 0.02 240);
+            --popover: oklch(1 0 0);
+            --popover-foreground: oklch(0.25 0.02 240);
+            --primary: oklch(0.65 0.18 196);
+            --primary-foreground: oklch(0.98 0.01 240);
+            --secondary: oklch(0.92 0.05 130);
+            --secondary-foreground: oklch(0.3 0.05 130);
+            --muted: oklch(0.95 0.01 240);
+            --muted-foreground: oklch(0.5 0.02 240);
+            --accent: oklch(0.8 0.12 90);
+            --accent-foreground: oklch(0.2 0.05 90);
+            --destructive: oklch(0.7 0.2 30);
+            --destructive-foreground: oklch(0.98 0.01 240);
+            --border: oklch(0.85 0.02 240);
+            --input: oklch(0.85 0.02 240);
+            --ring: oklch(0.65 0.18 196);
+            --font-sans: 'DM Sans', sans-serif;
+            --font-serif: 'Merriweather', serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius: 0.75rem;
+            --shadow-2xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-2xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+            --tracking-normal: 0em;
+            --spacing: 0.25rem;
+            --radius-sm: calc(var(--radius) - 0.25rem);
+            --radius-md: var(--radius);
+            --radius-lg: calc(var(--radius) + 0.25rem);
+            --radius-xl: calc(var(--radius) + 0.5rem);
+            
+            /* Quest-specific colors */
+            --quest-easy: oklch(0.7 0.15 150);
+            --quest-medium: oklch(0.75 0.15 90);
+            --quest-hard: oklch(0.6 0.15 45);
+            --quest-epic: oklch(0.55 0.15 270);
+            
+            /* Map-specific variables */
+            --map-marker-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            --map-control-bg: rgba(255, 255, 255, 0.9);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-sans);
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-container {
+            padding: 16px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--card);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+        
+        .search-bar:focus-within {
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--primary);
+        }
+        
+        .search-bar input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            margin-left: 8px;
+            font-size: 16px;
+            color: var(--foreground);
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+        }
+        
+        .map-container {
+            flex: 1;
+            background-color: #e8eef1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+        
+        .map-control {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--map-control-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .map-control:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .quest-marker {
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .quest-marker:hover {
+            transform: translate(-50%, -50%) scale(1.1) translateY(-3px);
+        }
+        
+        .quest-marker.easy {
+            color: var(--quest-easy);
+        }
+        
+        .quest-marker.medium {
+            color: var(--quest-medium);
+        }
+        
+        .quest-marker.hard {
+            color: var(--quest-hard);
+        }
+        
+        .quest-marker.epic {
+            color: var(--quest-epic);
+        }
+        
+        .user-location {
+            width: 24px;
+            height: 24px;
+            transform: translate(-50%, -50%);
+        }
+        
+        .user-location::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            opacity: 0.2;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.8;
+            }
+        }
+        
+        .nearby-quests {
+            background-color: var(--card);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            padding: 16px;
+            margin-top: -20px;
+            position: relative;
+            z-index: 900;
+            box-shadow: var(--shadow-lg);
+            max-height: 40vh;
+            overflow: hidden;
+        }
+        
+        .nearby-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .nearby-header h2 {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--foreground);
+        }
+        
+        .nearby-header a {
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .quest-cards {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+        
+        .quest-cards::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .quest-card {
+            min-width: 160px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            background-color: var(--background);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease-out;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+        
+        .quest-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .quest-card-image {
+            height: 100px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        .quest-difficulty {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+        }
+        
+        .difficulty-easy {
+            background-color: var(--quest-easy);
+        }
+        
+        .difficulty-medium {
+            background-color: var(--quest-medium);
+        }
+        
+        .difficulty-hard {
+            background-color: var(--quest-hard);
+        }
+        
+        .difficulty-epic {
+            background-color: var(--quest-epic);
+        }
+        
+        .quest-card-content {
+            padding: 12px;
+        }
+        
+        .quest-card-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: var(--foreground);
+        }
+        
+        .quest-card-distance {
+            font-size: 12px;
+            color: var(--muted-foreground);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            background-color: var(--card);
+            border-top: 1px solid var(--border);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--muted-foreground);
+            font-size: 12px;
+            gap: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-item-icon {
+            font-size: 24px;
+        }
+
+        /* Step Details Card */
+        .step-card {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            box-shadow: var(--shadow-xl);
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            z-index: 1001;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .step-card.active {
+            transform: translateY(0);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-drag-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--muted);
+            border-radius: 2px;
+            margin: 0 auto;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--muted-foreground);
+            padding: 4px;
+        }
+
+        .card-content {
+            padding: 16px;
+        }
+
+        .step-info h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--foreground);
+        }
+
+        .step-description {
+            color: var(--muted-foreground);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .step-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .meta-label {
+            font-size: 12px;
+            color: var(--muted-foreground);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            color: var(--foreground);
+        }
+
+        .step-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--secondary-foreground);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Reward Modal */
+        .reward-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1002;
+        }
+
+        .reward-modal.active {
+            display: flex;
+        }
+
+        .reward-modal-content {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .reward-modal h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: var(--foreground);
+        }
+
+        .reward-code {
+            background: var(--muted);
+            padding: 16px;
+            border-radius: var(--radius);
+            margin: 16px 0;
+        }
+
+        .reward-code code {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 900;
+            display: none;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--muted);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animation for new quest appearing */
+        @keyframes questAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(10px);
+            }
+            70% {
+                transform: scale(1.05) translateY(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .new-quest {
+            animation: questAppear 0.4s forwards;
+        }
+
+        /* Leaflet map styles */
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        .leaflet-container {
+            font-family: var(--font-sans);
+        }
+
+        .custom-marker {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--map-marker-shadow);
+            border: 3px solid white;
+        }
+
+        .marker-easy {
+            background: var(--quest-easy);
+        }
+
+        .marker-medium {
+            background: var(--quest-medium);
+        }
+
+        .marker-hard {
+            background: var(--quest-hard);
+        }
+
+        .marker-epic {
+            background: var(--quest-epic);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-bar">
+                <i data-lucide="search" size="20" color="var(--muted-foreground)"></i>
+                <input type="text" id="search-input" placeholder="Search quests or locations...">
+                <i data-lucide="mic" size="20" color="var(--muted-foreground)"></i>
+            </div>
+        </div>
+        
+        <!-- Map -->
+        <div class="map-container">
+            <div id="map"></div>
+            
+            <!-- Loading Overlay -->
+            <div id="loading-overlay" class="loading-overlay">
+                <div class="loading-spinner"></div>
+                <p>Finding nearby quests...</p>
+            </div>
+            
+            <!-- Map Controls -->
+            <div class="map-overlay">
+                <div class="map-control" id="layers-btn">
+                    <i data-lucide="layers" size="24" color="var(--foreground)"></i>
+                </div>
+                <div class="map-control" id="filter-btn">
+                    <i data-lucide="filter" size="24" color="var(--foreground)"></i>
+                </div>
+                <div class="map-control" id="locate-btn">
+                    <i data-lucide="locate" size="24" color="var(--primary)"></i>
+                </div>
+                <div class="map-control" id="back-to-creator-btn">
+                    <i data-lucide="plus" size="24" color="var(--foreground)"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Nearby Quests -->
+        <div class="nearby-quests">
+            <div class="nearby-header">
+                <h2>Nearby Quests</h2>
+                <a href="#" id="see-all-btn">See All</a>
+            </div>
+            <div class="quest-cards" id="quest-cards-container">
+                <!-- Quest cards will be populated dynamically -->
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" data-nav="home">
+                <i data-lucide="home" size="24"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" data-nav="explore">
+                <i data-lucide="compass" size="24"></i>
+                <span>Explore</span>
+            </div>
+            <div class="nav-item" data-nav="saved">
+                <i data-lucide="bookmark" size="24"></i>
+                <span>Saved</span>
+            </div>
+            <div class="nav-item" data-nav="profile">
+                <i data-lucide="user" size="24"></i>
+                <span>Profile</span>
+            </div>
+        </div>
+
+        <!-- Step Details Card -->
+        <div id="step-card" class="step-card">
+            <div class="card-header">
+                <div class="card-drag-handle"></div>
+                <button type="button" id="close-card" class="close-btn">×</button>
+            </div>
+            
+            <div class="card-content">
+                <div class="step-info">
+                    <h2 id="step-name" class="step-title">Step Name</h2>
+                    <p id="step-description" class="step-description">Step description goes here...</p>
+                    
+                    <div class="step-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Distance</span>
+                            <span id="step-distance" class="meta-value">0.0 km</span>
+                        </div>
+                        
+                        <div id="step-timing" class="meta-item" style="display: none;">
+                            <span class="meta-label" id="timing-label">Available</span>
+                            <span id="timing-value" class="meta-value">Now</span>
+                        </div>
+                        
+                        <div id="step-rewards" class="meta-item" style="display: none;">
+                            <span class="meta-label">Remaining Rewards</span>
+                            <span id="rewards-count" class="meta-value">Unlimited</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-actions">
+                    <button type="button" id="directions-btn" class="btn btn-secondary">Get Directions</button>
+                    <button type="button" id="claim-btn" class="btn btn-primary">Claim Reward</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Claimed Reward Modal -->
+        <div id="reward-modal" class="reward-modal">
+            <div class="reward-modal-content">
+                <h2>🎉 Reward Claimed!</h2>
+                <div class="reward-code">
+                    <p>Your reward code:</p>
+                    <code id="claimed-reward-code">REWARD123</code>
+                </div>
+                <button type="button" id="close-reward-modal" class="btn btn-primary">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Global variables
+        let map;
+        let userLocation = null;
+        let questsData = null;
+        let currentStep = null;
+        let markers = [];
+
+        // Initialize the app
+        async function initApp() {
+            showLoading();
+            await loadQuestsData();
+            await initMap();
+            await getCurrentLocation();
+            populateQuestCards();
+            setupEventListeners();
+            hideLoading();
+        }
+
+        // Load quests data
+        async function loadQuestsData() {
+            try {
+                const response = await fetch('database.json');
+                questsData = await response.json();
+            } catch (error) {
+                console.error('Error loading quests data:', error);
+                questsData = { quests: [] };
+            }
+        }
+
+        // Initialize map
+        async function initMap() {
+            map = L.map('map').setView([38.7471, -9.1414], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add quest markers
+            addQuestMarkers();
+        }
+
+        // Get current location
+        async function getCurrentLocation() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        
+                        // Add user location marker
+                        const userIcon = L.divIcon({
+                            className: 'user-location',
+                            html: '<i data-lucide="navigation" size="24" color="var(--primary)"></i>',
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        });
+                        
+                        L.marker([userLocation.lat, userLocation.lng], { icon: userIcon }).addTo(map);
+                        map.setView([userLocation.lat, userLocation.lng], 15);
+                        lucide.createIcons();
+                    },
+                    (error) => {
+                        console.error('Error getting location:', error);
+                        // Default to Lisbon if location access is denied
+                        userLocation = { lat: 38.7471, lng: -9.1414 };
+                        map.setView([userLocation.lat, userLocation.lng], 13);
+                    }
+                );
+            }
+        }
+
+        // Add quest markers to map
+        function addQuestMarkers() {
+            if (!questsData || !questsData.quests) return;
+
+            questsData.quests.forEach(quest => {
+                quest.steps.forEach(step => {
+                    const difficulty = getDifficultyFromDistance(step.claimingRadius);
+                    const markerClass = `marker-${difficulty}`;
+                    
+                    const customIcon = L.divIcon({
+                        className: `custom-marker ${markerClass}`,
+                        html: '<i data-lucide="map-pin" size="16" color="white"></i>',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16]
+                    });
+                    
+                    const marker = L.marker([step.coordinates.x, step.coordinates.y], { 
+                        icon: customIcon 
+                    }).addTo(map);
+                    
+                    marker.on('click', () => showStepDetails(step, quest));
+                    markers.push(marker);
+                });
+            });
+            
+            lucide.createIcons();
+        }
+
+        // Get difficulty based on claiming radius
+        function getDifficultyFromDistance(radius) {
+            if (radius <= 25) return 'easy';
+            if (radius <= 50) return 'medium';
+            if (radius <= 100) return 'hard';
+            return 'epic';
+        }
+
+        // Populate quest cards
+        function populateQuestCards() {
+            const container = document.getElementById('quest-cards-container');
+            container.innerHTML = '';
+
+            if (!questsData || !questsData.quests) return;
+
+            questsData.quests.forEach(quest => {
+                const distance = userLocation ? calculateDistance(userLocation, quest.steps[0].coordinates) : 0;
+                const difficulty = getDifficultyFromDistance(quest.steps[0].claimingRadius);
+                
+                const card = document.createElement('div');
+                card.className = 'quest-card';
+                card.innerHTML = `
+                    <div class="quest-card-image">
+                        <div class="quest-difficulty difficulty-${difficulty}">${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}</div>
+                    </div>
+                    <div class="quest-card-content">
+                        <div class="quest-card-title">${quest.story.name}</div>
+                        <div class="quest-card-distance">
+                            <i data-lucide="map-pin" size="12"></i>
+                            ${distance.toFixed(1)} km away
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    if (quest.steps.length > 0) {
+                        showStepDetails(quest.steps[0], quest);
+                        map.setView([quest.steps[0].coordinates.x, quest.steps[0].coordinates.y], 16);
+                    }
+                });
+                
+                container.appendChild(card);
+            });
+            
+            lucide.createIcons();
+        }
+
+        // Calculate distance between two points
+        function calculateDistance(pos1, pos2) {
+            const R = 6371; // Earth's radius in kilometers
+            const dLat = (pos2.x - pos1.lat) * Math.PI / 180;
+            const dLon = (pos2.y - pos1.lng) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(pos1.lat * Math.PI / 180) * Math.cos(pos2.x * Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // Show step details
+        function showStepDetails(step, quest) {
+            currentStep = { step, quest };
+            
+            document.getElementById('step-name').textContent = step.name;
+            document.getElementById('step-description').textContent = step.description;
+            
+            if (userLocation) {
+                const distance = calculateDistance(userLocation, step.coordinates);
+                document.getElementById('step-distance').textContent = `${distance.toFixed(2)} km`;
+            }
+            
+            // Show reward info if enabled
+            if (step.reward.enabled) {
+                document.getElementById('step-rewards').style.display = 'block';
+                document.getElementById('rewards-count').textContent = 
+                    step.reward.limited ? step.reward.quantity || '0' : 'Unlimited';
+            }
+            
+            document.getElementById('step-card').classList.add('active');
+        }
+
+        // Hide step details
+        function hideStepDetails() {
+            document.getElementById('step-card').classList.remove('active');
+            currentStep = null;
+        }
+
+        // Show loading
+        function showLoading() {
+            document.getElementById('loading-overlay').classList.add('active');
+        }
+
+        // Hide loading
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.remove('active');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Close step card
+            document.getElementById('close-card').addEventListener('click', hideStepDetails);
+
+            // Map controls
+            document.getElementById('locate-btn').addEventListener('click', () => {
+                if (userLocation) {
+                    map.setView([userLocation.lat, userLocation.lng], 16);
+                }
+            });
+
+            document.getElementById('back-to-creator-btn').addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+
+            // Navigation items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.nav-item').forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+
+            // Claim reward
+            document.getElementById('claim-btn').addEventListener('click', () => {
+                if (currentStep && currentStep.step.reward.enabled) {
+                    // Check if user is within claiming radius
+                    if (userLocation) {
+                        const distance = calculateDistance(userLocation, currentStep.step.coordinates) * 1000; // Convert to meters
+                        if (distance <= currentStep.step.claimingRadius) {
+                            showRewardModal(currentStep.step.reward.code);
+                        } else {
+                            alert(`You need to be within ${currentStep.step.claimingRadius}m of the location to claim this reward.`);
+                        }
+                    } else {
+                        alert('Location access is required to claim rewards.');
+                    }
+                }
+            });
+
+            // Get directions
+            document.getElementById('directions-btn').addEventListener('click', () => {
+                if (currentStep && userLocation) {
+                    const url = `https://maps.google.com/maps?saddr=${userLocation.lat},${userLocation.lng}&daddr=${currentStep.step.coordinates.x},${currentStep.step.coordinates.y}`;
+                    window.open(url, '_blank');
+                }
+            });
+
+            // Close reward modal
+            document.getElementById('close-reward-modal').addEventListener('click', () => {
+                document.getElementById('reward-modal').classList.remove('active');
+                hideStepDetails();
+            });
+
+            // Search functionality
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                // Implement search filtering logic here
+                console.log('Searching for:', searchTerm);
+            });
+
+            // Map control animations
+            document.querySelectorAll('.map-control').forEach(control => {
+                control.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+        }
+
+        // Show reward modal
+        function showRewardModal(rewardCode) {
+            document.getElementById('claimed-reward-code').textContent = rewardCode;
+            document.getElementById('reward-modal').classList.add('active');
+        }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>

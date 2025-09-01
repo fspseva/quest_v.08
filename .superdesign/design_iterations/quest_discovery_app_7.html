@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Discovery App - Minimal Glass</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --yellow: #FFD600;
+            --yellow-dark: #E6C000;
+            --yellow-light: rgba(255, 214, 0, 0.15);
+            --dark: #1A1A1A;
+            --gray-dark: #333333;
+            --gray: #666666;
+            --gray-light: #DDDDDD;
+            --white: #FFFFFF;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-bg-dark: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-shadow: rgba(0, 0, 0, 0.05);
+            --radius: 16px;
+            --radius-sm: 8px;
+            --radius-lg: 24px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+        
+        body {
+            background-color: var(--white);
+            color: var(--dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-container {
+            padding: 16px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        
+        .search-bar {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background-color: var(--glass-bg);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .search-bar:focus-within {
+            box-shadow: var(--shadow);
+            border: 1px solid var(--yellow);
+            background-color: var(--glass-bg-dark);
+        }
+        
+        .search-bar input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            margin-left: 8px;
+            font-size: 16px;
+            color: var(--dark);
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+        }
+        
+        .menu-button {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius);
+            background-color: var(--glass-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .menu-button:hover {
+            background-color: var(--glass-bg-dark);
+        }
+        
+        .map-container {
+            flex: 1;
+            background-color: #f5f5f5;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 5;
+        }
+        
+        .map-control {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--glass-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .map-control:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            background-color: var(--glass-bg-dark);
+        }
+        
+        .map-control.active {
+            background-color: var(--yellow);
+            border: 1px solid var(--yellow-dark);
+        }
+        
+        .quest-marker {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--yellow);
+        }
+        
+        .quest-marker:hover {
+            transform: translate(-50%, -50%) scale(1.1) translateY(-3px);
+        }
+        
+        .user-location {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            transform: translate(-50%, -50%);
+        }
+        
+        .user-location::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background-color: var(--yellow);
+            opacity: 0.2;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.8;
+            }
+        }
+        
+        .nearby-quests {
+            background-color: var(--glass-bg);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            padding: 24px 20px;
+            margin-top: -24px;
+            position: relative;
+            z-index: 10;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            border-left: 1px solid var(--glass-border);
+            border-right: 1px solid var(--glass-border);
+        }
+        
+        .nearby-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .nearby-header h2 {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--dark);
+        }
+        
+        .nearby-header a {
+            color: var(--yellow);
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .quest-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+            overflow-y: auto;
+            max-height: 240px;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+        
+        .quest-cards::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .quest-card {
+            border-radius: var(--radius);
+            overflow: hidden;
+            background-color: var(--glass-bg-dark);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease-out;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            height: 180px;
+        }
+        
+        .quest-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        .quest-card-image {
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .quest-difficulty {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            background-color: var(--yellow);
+        }
+        
+        .quest-card-content {
+            padding: 12px;
+        }
+        
+        .quest-card-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: var(--dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .quest-card-distance {
+            font-size: 12px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 16px 0;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            font-size: 12px;
+            gap: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active {
+            color: var(--yellow);
+        }
+        
+        .nav-item-icon {
+            font-size: 24px;
+        }
+        
+        /* Animation for new quest appearing */
+        @keyframes questAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(10px);
+            }
+            70% {
+                transform: scale(1.05) translateY(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .new-quest {
+            animation: questAppear 0.4s forwards;
+        }
+        
+        .floating-button {
+            position: absolute;
+            bottom: 80px;
+            right: 16px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--yellow);
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            z-index: 20;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .floating-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .quest-count {
+            position: absolute;
+            top: 80px;
+            left: 16px;
+            background-color: var(--glass-bg);
+            color: var(--dark);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: var(--radius);
+            z-index: 5;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .tab-bar {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .tab.active {
+            color: var(--yellow);
+            border-bottom: 2px solid var(--yellow);
+        }
+        
+        .quest-tag {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background-color: var(--yellow-light);
+            border: 1px solid var(--yellow);
+            color: var(--dark);
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-bar">
+                <i data-lucide="search" size="20" color="var(--gray)"></i>
+                <input type="text" placeholder="Find quests nearby...">
+            </div>
+            <div class="menu-button">
+                <i data-lucide="menu" size="24" color="var(--gray-dark)"></i>
+            </div>
+        </div>
+        
+        <!-- Map -->
+        <div class="map-container">
+            <!-- This would be replaced with an actual map API like Google Maps or Mapbox -->
+            <img src="https://api.mapbox.com/styles/v1/mapbox/light-v10/static/-122.4194,37.7749,13,0/800x1000?access_token=pk.eyJ1IjoiZXhhbXBsZXVzZXIiLCJhIjoiY2xnNXRtems1MDJzMDNkcGJvNnlhcWIwZCJ9.3Vb6YVL8pCl9L98yBf019A" alt="Map" style="width: 100%; height: 100%; object-fit: cover;">
+            
+            <!-- Quest Count -->
+            <div class="quest-count">
+                <i data-lucide="map-pin" size="14" style="display: inline; margin-right: 4px; vertical-align: -2px;" color="var(--yellow)"></i>
+                12 quests nearby
+            </div>
+            
+            <!-- Quest Markers -->
+            <div class="quest-marker" style="top: 30%; left: 40%;">
+                <i data-lucide="map-pin" size="32" stroke-width="2.5"></i>
+            </div>
+            <div class="quest-marker" style="top: 45%; left: 60%;">
+                <i data-lucide="map-pin" size="32" stroke-width="2.5"></i>
+            </div>
+            <div class="quest-marker" style="top: 55%; left: 30%;">
+                <i data-lucide="map-pin" size="32" stroke-width="2.5"></i>
+            </div>
+            <div class="quest-marker" style="top: 65%; left: 70%;">
+                <i data-lucide="map-pin" size="32" stroke-width="2.5"></i>
+            </div>
+            
+            <!-- User Location -->
+            <div class="user-location" style="top: 50%; left: 50%;">
+                <i data-lucide="navigation" size="24" color="var(--yellow)" fill="var(--yellow)"></i>
+            </div>
+            
+            <!-- Map Controls -->
+            <div class="map-overlay">
+                <div class="map-control">
+                    <i data-lucide="layers" size="20" color="var(--dark)"></i>
+                </div>
+                <div class="map-control active">
+                    <i data-lucide="locate" size="20" color="var(--dark)"></i>
+                </div>
+            </div>
+            
+            <!-- Floating Action Button -->
+            <div class="floating-button">
+                <i data-lucide="filter" size="24" color="var(--dark)"></i>
+            </div>
+        </div>
+        
+        <!-- Nearby Quests -->
+        <div class="nearby-quests">
+            <div class="nearby-header">
+                <h2>Discover Quests</h2>
+                <a href="#">View All</a>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="tab-bar">
+                <div class="tab active">Nearby</div>
+                <div class="tab">Popular</div>
+                <div class="tab">New</div>
+            </div>
+            
+            <div class="quest-cards">
+                <div class="quest-card">
+                    <div class="quest-card-image" style="background-image: url('https://images.unsplash.com/photo-1519331379826-f10be5486c6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');">
+                        <div class="quest-difficulty">Easy</div>
+                        <div class="quest-tag">Urban</div>
+                    </div>
+                    <div class="quest-card-content">
+                        <div class="quest-card-title">Urban Treasure Hunt</div>
+                        <div class="quest-card-distance">
+                            <i data-lucide="map-pin" size="12" color="var(--yellow)"></i>
+                            0.5 miles away
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quest-card">
+                    <div class="quest-card-image" style="background-image: url('https://images.unsplash.com/photo-1501555088652-021faa106b9b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');">
+                        <div class="quest-difficulty">Medium</div>
+                        <div class="quest-tag">Nature</div>
+                    </div>
+                    <div class="quest-card-content">
+                        <div class="quest-card-title">Coastal Adventure</div>
+                        <div class="quest-card-distance">
+                            <i data-lucide="map-pin" size="12" color="var(--yellow)"></i>
+                            1.2 miles away
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quest-card">
+                    <div class="quest-card-image" style="background-image: url('https://images.unsplash.com/photo-1533240332313-0db49b459ad6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');">
+                        <div class="quest-difficulty">Hard</div>
+                        <div class="quest-tag">Adventure</div>
+                    </div>
+                    <div class="quest-card-content">
+                        <div class="quest-card-title">Mountain Mystery</div>
+                        <div class="quest-card-distance">
+                            <i data-lucide="map-pin" size="12" color="var(--yellow)"></i>
+                            2.8 miles away
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quest-card">
+                    <div class="quest-card-image" style="background-image: url('https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');">
+                        <div class="quest-difficulty">Epic</div>
+                        <div class="quest-tag">Historical</div>
+                    </div>
+                    <div class="quest-card-content">
+                        <div class="quest-card-title">Ancient Ruins</div>
+                        <div class="quest-card-distance">
+                            <i data-lucide="map-pin" size="12" color="var(--yellow)"></i>
+                            3.5 miles away
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quest-card new-quest">
+                    <div class="quest-card-image" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');">
+                        <div class="quest-difficulty">Medium</div>
+                        <div class="quest-tag">Nature</div>
+                    </div>
+                    <div class="quest-card-content">
+                        <div class="quest-card-title">Forest Expedition</div>
+                        <div class="quest-card-distance">
+                            <i data-lucide="map-pin" size="12" color="var(--yellow)"></i>
+                            1.7 miles away
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quest-card">
+                    <div class="quest-card-image" style="background-image: url('https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');">
+                        <div class="quest-difficulty">Easy</div>
+                        <div class="quest-tag">Urban</div>
+                    </div>
+                    <div class="quest-card-content">
+                        <div class="quest-card-title">City Park Challenge</div>
+                        <div class="quest-card-distance">
+                            <i data-lucide="map-pin" size="12" color="var(--yellow)"></i>
+                            0.8 miles away
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <i data-lucide="map" size="24"></i>
+                <span>Map</span>
+            </div>
+            <div class="nav-item">
+                <i data-lucide="compass" size="24"></i>
+                <span>Explore</span>
+            </div>
+            <div class="nav-item">
+                <i data-lucide="bookmark" size="24"></i>
+                <span>Saved</span>
+            </div>
+            <div class="nav-item">
+                <i data-lucide="user" size="24"></i>
+                <span>Profile</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Simulate a new quest appearing after 3 seconds
+        setTimeout(() => {
+            const newQuest = document.querySelector('.new-quest');
+            newQuest.style.opacity = '0';
+            
+            setTimeout(() => {
+                newQuest.style.opacity = '1';
+                newQuest.style.animation = 'questAppear 0.4s forwards';
+            }, 100);
+        }, 3000);
+        
+        // Add click event to map controls
+        document.querySelectorAll('.map-control').forEach(control => {
+            control.addEventListener('click', function() {
+                document.querySelectorAll('.map-control').forEach(c => {
+                    c.classList.remove('active');
+                });
+                this.classList.add('active');
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 100);
+            });
+        });
+        
+        // Add click event to nav items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Add click event to tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Floating button animation
+        const floatingButton = document.querySelector('.floating-button');
+        floatingButton.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 100);
+        });
+        
+        // Menu button animation
+        const menuButton = document.querySelector('.menu-button');
+        menuButton.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

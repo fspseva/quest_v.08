@@ -8,7 +8,10 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(git checkout:*)",
-      "Bash(gh repo view:*)"
+      "Bash(gh repo view:*)",
+      "Read(/Users/fabioseva/Downloads/Private & Shared 2/**)",
+      "Bash(git merge:*)",
+      "Bash(git mv:*)"
     ],
     "deny": [],
     "ask": []
