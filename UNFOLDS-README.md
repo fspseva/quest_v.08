@@ -2,6 +2,15 @@
 
 UNFOLDS is a comprehensive mobile-first platform for creating and discovering geo-located stories that unfold step by step. Users can create interactive GPS-based narratives and explore stories created by others through an immersive map-centric experience.
 
+## 🚀 Quick Navigation
+| Module | Description | Launch |
+|--------|-------------|--------|
+| **Story Creator** | Author new geo-located stories with interactive maps | **[📝 Create Story](unfolds-creator.html)** |
+| **Story Discovery** | Explore stories on an interactive map with mobile-first design | **[🗺️ Discover Stories](unfolds-discovery.html)** |
+| **User Profile** | Manage your stories, view achievements, and track rewards | **[👤 My Profile](unfolds-profile.html)** |
+| **Legacy Creator** | Original quest creation interface (backward compatibility) | **[⚙️ Legacy Creator](index.html)** |
+| **Legacy Discovery** | Original discovery interface | **[🔍 Legacy Discovery](discovery.html)** |
+
 ## 🌟 Features Overview
 
 ### Core Concepts
@@ -39,6 +48,11 @@ UNFOLDS Implementation/
 ```
 
 ## 🚀 Quick Start
+
+### 📱 Live Demo Links
+- **[📝 Story Creator](unfolds-creator.html)** - Create new geo-located stories
+- **[🗺️ Story Discovery](unfolds-discovery.html)** - Explore and discover stories on the map
+- **[👤 User Profile](unfolds-profile.html)** - Manage your stories, achievements, and rewards
 
 ### 1. Story Creation
 ```bash
