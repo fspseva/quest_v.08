@@ -112,9 +112,7 @@ class UnfoldsDiscovery {
             currentY = e.touches[0].clientY;
             const deltaY = startY - currentY;
             
-            if (deltaY > 50) {
-                this.setSheetState('half');
-            } else if (deltaY > 100) {
+            if (deltaY > 75) {
                 this.setSheetState('full');
             } else if (deltaY < -50) {
                 this.setSheetState('collapsed');
@@ -128,8 +126,6 @@ class UnfoldsDiscovery {
         // Mouse events for desktop
         header.addEventListener('click', () => {
             if (this.sheetState === 'collapsed') {
-                this.setSheetState('half');
-            } else if (this.sheetState === 'half') {
                 this.setSheetState('full');
             } else {
                 this.setSheetState('collapsed');
@@ -175,7 +171,7 @@ class UnfoldsDiscovery {
         // Map events
         this.map.on('click', () => {
             if (this.sheetState === 'full') {
-                this.setSheetState('half');
+                this.setSheetState('collapsed');
             }
         });
     }
@@ -203,7 +199,7 @@ class UnfoldsDiscovery {
         } else {
             toggle.innerHTML = '📋 List';
             toggle.classList.remove('active');
-            this.setSheetState('half');
+            this.setSheetState('collapsed');
             this.showMapMarkers();
         }
     }
