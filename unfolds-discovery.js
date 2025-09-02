@@ -32,12 +32,26 @@ class UnfoldsDiscovery {
             position: 'bottomright'
         }).addTo(this.map);
 
-        // Add dark tile layer
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        // Add map tile layer - fallback to standard OSM if dark theme fails
+        const primaryTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '© OpenStreetMap contributors © CARTO',
             subdomains: 'abcd',
             maxZoom: 20
-        }).addTo(this.map);
+        });
+
+        const fallbackTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        });
+
+        // Try dark theme first, fallback to standard OSM
+        primaryTileLayer.addTo(this.map);
+        
+        primaryTileLayer.on('tileerror', () => {
+            console.warn('Dark tiles failed, switching to standard OpenStreetMap');
+            this.map.removeLayer(primaryTileLayer);
+            fallbackTileLayer.addTo(this.map);
+        });
 
         // Add custom icons
         this.createCustomIcons();
