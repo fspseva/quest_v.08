@@ -16,6 +16,10 @@ class UnfoldsDiscovery {
         this.bindEvents();
         this.loadStories();
         this.requestLocation();
+        // Ensure drawer starts in collapsed state
+        setTimeout(() => {
+            this.setSheetState('collapsed');
+        }, 100);
     }
 
     initMap() {

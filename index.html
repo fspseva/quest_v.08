@@ -126,21 +126,23 @@
         }
 
         .sliding-sheet.collapsed {
-            transform: translateY(calc(100% - 50px));
+            transform: translateY(calc(100% - 50px)) !important;
         }
 
         .sliding-sheet.collapsed .sheet-title,
         .sliding-sheet.collapsed .filter-chips {
-            display: none;
+            display: none !important;
         }
 
         .sliding-sheet.collapsed .sheet-header {
-            padding: 15px 20px;
-            border-bottom: none;
+            padding: 15px 20px !important;
+            border-bottom: none !important;
         }
 
         .sliding-sheet.collapsed .sheet-content {
-            display: none;
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
 
         .sliding-sheet.full {
