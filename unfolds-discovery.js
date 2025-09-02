@@ -534,19 +534,6 @@ class UnfoldsDiscovery {
                 <div class="difficulty-badge difficulty-${difficulty}">${difficulty}</div>
             </div>
 
-            ${story.steps ? `
-                <div>
-                    <h4>Steps Preview:</h4>
-                    ${story.steps.slice(0, 3).map((step, index) => `
-                        <div style="margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                            <strong>Step ${index + 1}: ${step.name}</strong><br>
-                            <small style="color: rgba(255,255,255,0.7);">${step.description}</small><br>
-                            <small style="color: #FFD700; font-weight: 500;">📍 Claiming radius: ${step.claim_radius || 25}m</small>
-                        </div>
-                    `).join('')}
-                    ${story.steps.length > 3 ? '<small>... and more</small>' : ''}
-                </div>
-            ` : ''}
 
             <div class="action-buttons">
                 <button class="btn btn-secondary" onclick="unfolds.shareStory('${story.id}')">
