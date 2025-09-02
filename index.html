@@ -126,7 +126,21 @@
         }
 
         .sliding-sheet.collapsed {
-            transform: translateY(calc(100% - 120px));
+            transform: translateY(calc(100% - 50px));
+        }
+
+        .sliding-sheet.collapsed .sheet-title,
+        .sliding-sheet.collapsed .filter-chips {
+            display: none;
+        }
+
+        .sliding-sheet.collapsed .sheet-header {
+            padding: 15px 20px;
+            border-bottom: none;
+        }
+
+        .sliding-sheet.collapsed .sheet-content {
+            display: none;
         }
 
         .sliding-sheet.half {
